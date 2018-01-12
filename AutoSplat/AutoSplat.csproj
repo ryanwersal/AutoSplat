@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.1</Version>
+    <Authors>Ryan Wersal</Authors>
+    <Company />
+    <PackageProjectUrl>https://github.com/ryanwersal/AutoSplat</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ryanwersal/AutoSplat</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/ryanwersal/AutoSplat/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageTags>splat moq automock</PackageTags>
+    <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+    <Description>Automatically Moq dependencies encountered through Splat's Locator.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moq" Version="4.8.1" />
+    <PackageReference Include="Splat" Version="2.0.0" />
+  </ItemGroup>
+
+</Project>
