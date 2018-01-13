@@ -17,11 +17,6 @@ build:
 before_build:
   - nuget restore AutoSplat.sln
 
-test:
-  assemblies:
-    only:
-      - 'AutoSplat.Tests\**\AutoSplat.Tests.dll'
-
 dotnet_csproj:
   patch: true
   file: 'AutoSplat\AutoSplat.csproj'
