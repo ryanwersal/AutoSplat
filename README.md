@@ -1,5 +1,9 @@
 # AutoSplat
 
+[![AppVeyor](https://img.shields.io/appveyor/ci/ryanwersal/AutoSplat.svg?style=for-the-badge)](https://ci.appveyor.com/project/ryanwersal/autosplat)
+[![AppVeyor tests](https://img.shields.io/appveyor/tests/ryanwersal/AutoSplat.svg?style=for-the-badge)](https://ci.appveyor.com/project/ryanwersal/autosplat/build/tests)
+[![NuGet](https://img.shields.io/nuget/v/AutoSplat.svg?style=for-the-badge)](https://www.nuget.org/packages/AutoSplat)
+
 The objective is to do for Splat what projects like [Autofac.Extras.Moq provide](https://github.com/autofac/Autofac.Extras.Moq) for Autofac. In short, provide primitive mocks for types encountered using Splat's Locator to simplify mocking scenarios where you are
 not verifying all dependencies but still require them to, at least, be non-null.
 
