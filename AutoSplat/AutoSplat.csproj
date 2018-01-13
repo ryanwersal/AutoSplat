@@ -5,7 +5,6 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>0.1</Version>
     <Authors>Ryan Wersal</Authors>
-    <Company />
     <PackageProjectUrl>https://github.com/ryanwersal/AutoSplat</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ryanwersal/AutoSplat</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/ryanwersal/AutoSplat/blob/master/LICENSE</PackageLicenseUrl>
