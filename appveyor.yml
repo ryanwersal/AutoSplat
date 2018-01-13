@@ -25,3 +25,10 @@ dotnet_csproj:
   assembly_version: '{version}'
   file_version: '{version}'
   informational_version: '{version}'
+
+deploy:
+  provider: nuget
+  api_key:
+    secure: BKFZiNBzxIo7iznqfjlIy85yPtwk5pgHpf2YguGaRVsNdIFOMSoCdD0K0mD4SuVT
+  skip_symbols: true
+  artifact: 'AutoSplat\**\*.nupkg'
