@@ -15,6 +15,9 @@ build:
   publish_nuget_symbols: false
   include_nuget_references: true
 
+before_build:
+  - nuget restore AutoSplat.sln
+
 dotnet_csproj:
   patch: true
   file: 'AutoSplat\AutoSplat.csproj'
