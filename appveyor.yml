@@ -26,9 +26,12 @@ dotnet_csproj:
   file_version: '{version}'
   informational_version: '{version}'
 
+artifacts:
+  - path: '**\*.nupkg'
+    name: Packages
+
 deploy:
   provider: NuGet
   api_key:
     secure: BKFZiNBzxIo7iznqfjlIy85yPtwk5pgHpf2YguGaRVsNdIFOMSoCdD0K0mD4SuVT
   skip_symbols: true
-  artifact: 'AutoSplat\**\*.nupkg'
