@@ -41,10 +41,27 @@ namespace AutoSplat.Tests
         }
 
         [Fact]
-        public void ShouldThrowIfTypeOtherThanMockProvided()
+        public void ShouldAllowNonMockRegistrations()
         {
-            Assert.Throws<MustBeMockException>(
-                () => Locator.CurrentMutable.Register(() => new object(), typeof(object)));
+            Locator.CurrentMutable.Register(() => new object(), typeof(object));
+        }
+
+        [Fact]
+        public void ShouldReturnNonMock()
+        {
+            Locator.CurrentMutable.Register(() => new object(), typeof(object));
+            var result = Locator.Current.GetService<object>();
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void ShouldReturnNonMocks()
+        {
+            Locator.CurrentMutable.Register(() => new object(), typeof(object), "foo");
+            Locator.CurrentMutable.Register(() => new object(), typeof(object), "bar");
+            var results = Locator.Current.GetServices<object>();
+            Assert.NotNull(results);
+            Assert.NotEmpty(results);
         }
     }
 }

@@ -9,8 +9,8 @@ namespace AutoSplat
 {
     public class MockDependencyResolver : IMutableDependencyResolver
     {
-        private ConcurrentDictionary<ServiceInfo, ConcurrentBag<Mock>> Dependencies { get; } 
-            = new ConcurrentDictionary<ServiceInfo, ConcurrentBag<Mock>>();
+        private ConcurrentDictionary<ServiceInfo, ConcurrentBag<object>> Dependencies { get; } 
+            = new ConcurrentDictionary<ServiceInfo, ConcurrentBag<object>>();
 
         public void Dispose()
         {
@@ -38,10 +38,14 @@ namespace AutoSplat
             if (!Dependencies.ContainsKey(serviceInfo))
             {
                 var obj = MockService(serviceType);
-                Dependencies[serviceInfo] = new ConcurrentBag<Mock>(new[] { obj });
+                Dependencies[serviceInfo] = new ConcurrentBag<object>(new[] { obj });
             }
-            var mock = Dependencies[serviceInfo].First();
-            return GetMockObject(mock, serviceType);
+            var service = Dependencies[serviceInfo].First();
+            if (!(service is Mock))
+            {
+                return service;
+            }
+            return GetMockObject(service, serviceType);
         }
 
         public IEnumerable<object> GetServices(Type serviceType, string contract = null)
@@ -50,7 +54,7 @@ namespace AutoSplat
             if (!Dependencies.ContainsKey(serviceInfo))
             {
                 var obj = MockService(serviceType);
-                Dependencies[serviceInfo] = new ConcurrentBag<Mock>(new[] { obj });
+                Dependencies[serviceInfo] = new ConcurrentBag<object>(new[] { obj });
             }
             return Dependencies[serviceInfo]
                 .Select(m => GetMockObject(m, serviceType))
@@ -63,22 +67,11 @@ namespace AutoSplat
             var serviceInfo = new ServiceInfo(serviceType, contract);
             if (!Dependencies.ContainsKey(serviceInfo))
             {
-                Dependencies[serviceInfo] = new ConcurrentBag<Mock>();
+                Dependencies[serviceInfo] = new ConcurrentBag<object>();
             }
 
             var obj = factory();
-            if (!(obj is Mock))
-            {
-                // Splat has some default services it adds during container change.
-                if (obj is ILogManager || obj is ILogger)
-                {
-                    return;
-                }
-
-                // Otherwise require all registered services to be mocks.
-                throw new MustBeMockException();
-            }
-            Dependencies[serviceInfo].Add((Mock)obj);
+            Dependencies[serviceInfo].Add(obj);
         }
 
         public IDisposable ServiceRegistrationCallback(Type serviceType, string contract, Action<IDisposable> callback)
