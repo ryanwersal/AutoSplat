@@ -1,0 +1,36 @@
+<Project DefaultTargets="Build">
+  <!-- Allow for skipping non-test projects -->
+  <Target Name="VSTestIfTestProject">
+    <CallTarget Targets="VSTest" Condition="'$(IsTestProject)' == 'true'" />
+  </Target>
+
+  <!-- Set the repository root into a variable -->
+  <PropertyGroup>
+    <SourceRoot>$(MSBuildThisFileDirectory)</SourceRoot>
+  </PropertyGroup>
+
+  <!-- Set output folder for created NuGet packages -->
+  <PropertyGroup>
+    <PackageOutputPath Condition=" '$(PackageOutputPath)'=='' ">$(SourceRoot)/Artifacts/$(Configuration)</PackageOutputPath>
+  </PropertyGroup>
+
+  <!-- Versioning properties -->
+  <PropertyGroup>
+    <VersionPrefix Condition=" '$(VersionPrefix)'=='' ">1.1.0</VersionPrefix>
+    <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
+  </PropertyGroup>
+
+  <!-- For Debug builds generated a date/time dependent version suffix -->
+  <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
+    <VersionSuffix Condition=" '$(VersionSuffix)'=='' ">dev</VersionSuffix>
+    <VersionSuffix Condition=" '$(VersionDateSuffix)'!='' ">$(VersionSuffix)-$(VersionDateSuffix)</VersionSuffix>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Moq>4.8.1</Moq>
+    <Splat>2.0.0</Splat>
+    <Microsoft_NET_Test_Sdk>15.9.0</Microsoft_NET_Test_Sdk>
+    <xunit>2.4.0</xunit>
+    <xunit_runner_visualstudio>2.4.0</xunit_runner_visualstudio>
+  </PropertyGroup>
+</Project>
