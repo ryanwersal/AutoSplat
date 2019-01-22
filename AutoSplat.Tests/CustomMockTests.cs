@@ -49,9 +49,10 @@ namespace AutoSplat.Tests
         [Fact]
         public void ShouldReturnNonMock()
         {
-            Locator.CurrentMutable.Register(() => new object(), typeof(object));
+            var expected = new object();
+            Locator.CurrentMutable.Register(() => expected, typeof(object));
             var result = Locator.Current.GetService<object>();
-            Assert.NotNull(result);
+            Assert.Same(expected, result);
         }
 
         [Fact]
@@ -59,9 +60,36 @@ namespace AutoSplat.Tests
         {
             Locator.CurrentMutable.Register(() => new object(), typeof(object), "foo");
             Locator.CurrentMutable.Register(() => new object(), typeof(object), "bar");
-            var results = Locator.Current.GetServices<object>();
+            var results = Locator.Current.GetServices<object>("bar");
             Assert.NotNull(results);
-            Assert.NotEmpty(results);
+            Assert.Single(results);
+        }
+
+        [Fact]
+        public void ShouldReturnLastIfCollectionOfServicesRegistered()
+        {
+            var first = new Common(1);
+            Locator.CurrentMutable.RegisterConstant(first, typeof(ICommon));
+            var last = new Common(2);
+            Locator.CurrentMutable.RegisterConstant(last, typeof(ICommon));
+
+            Assert.Same(last, Locator.Current.GetService<ICommon>());
+        }
+
+        [Fact]
+        public void RealFactoryMethodsShouldBeInvokedAtGetTimeNotRegisterTime()
+        {
+            const int expectedValue = 10;
+
+            var index = 0;
+            Locator.CurrentMutable.Register(() => new Common(index++), typeof(ICommon));
+
+            for (var i = 0; i < expectedValue; ++i)
+            {
+                Locator.Current.GetService<ICommon>();
+            }
+
+            Assert.Equal(expectedValue, Locator.Current.GetService<ICommon>().Number);
         }
     }
 }
