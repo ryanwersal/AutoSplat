@@ -20,12 +20,6 @@
     <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
   </PropertyGroup>
 
-  <!-- For Debug builds generate a date/time dependent version suffix -->
-  <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
-    <VersionSuffix Condition=" '$(VersionSuffix)'=='' ">preview</VersionSuffix>
-    <VersionSuffix Condition=" '$(VersionDateSuffix)'!='' ">$(VersionSuffix)-$(VersionDateSuffix)</VersionSuffix>
-  </PropertyGroup>
-
   <PropertyGroup>
     <Moq>4.8.1</Moq>
     <Splat>2.0.0</Splat>
