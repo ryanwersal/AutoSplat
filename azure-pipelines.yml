@@ -5,11 +5,11 @@ steps:
   - script: dotnet restore
     displayName: 'Restoring Packages'
 
-  - script: dotnet build --configuration Debug --version-suffix $(Build.BuildNumber)
+  - script: dotnet build --configuration Debug --version-suffix "preview-$(Build.BuildNumber)"
     condition: ne(variables['Build.SourceBranch'], 'refs/heads/release')
     displayName: 'Building'
 
-  - script: dotnet test --logger trx
+  - script: dotnet test --no-restore --no-build --logger trx
     displayName: 'Run automated tests'
     continueOnError: true
 
