@@ -12,7 +12,7 @@ namespace AutoSplat.Tests
             var currentResolver = Locator.Current;
             using (new AutoMockContext())
             {
-                Assert.NotEqual(currentResolver, Locator.Current);
+                Assert.NotSame(currentResolver, Locator.Current);
             }
         }
 
@@ -21,7 +21,7 @@ namespace AutoSplat.Tests
         {
             var currentResolver = Locator.Current;
             using (new AutoMockContext()) { }
-            Assert.Equal(currentResolver, Locator.Current);
+            Assert.Same(currentResolver, Locator.Current);
         }
     }
 }

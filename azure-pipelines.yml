@@ -1,14 +1,13 @@
-jobs:
-- job: Build
-  pool:
-    vmImage: 'Ubuntu 16.04'
+pool:
+  vmImage: 'Ubuntu 16.04'
 
-  steps:
+steps:
   - script: dotnet restore
-    displayName: 'Restore dependencies'
+    displayName: 'Restoring Packages'
 
-  - script: dotnet build
-    displayName: 'Build'
+  - script: dotnet build --configuration Debug --version-suffix $(Build.BuildNumber)
+    condition: ne(variables['Build.SourceBranch'], 'refs/heads/release')
+    displayName: 'Building'
 
   - script: dotnet test --logger trx
     displayName: 'Run automated tests'
@@ -20,21 +19,15 @@ jobs:
       testResultsFiles: '**/*.trx'
       failOnStandardError: 'true'
 
-- job: Publish
-  dependsOn:
-  - Build
-
-  pool:
-    vmImage: 'Ubuntu 16.04'
-
-  steps:
-  - script: dotnet restore
-    displayName: 'Restoring Packages'
-
-  - script: dotnet build --configuration Debug --version-suffix $(Build.BuildNumber)
-    condition: ne(variables['Build.SourceBranch'], 'refs/heads/release')
-    displayName: 'Building'
-
   - script: dotnet build --configuration Release
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/release')
     displayName: 'Building (Release)'
+
+  - task: NuGetCommand@2
+    displayName: 'Publishing Build'
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/release')))
+    inputs:
+      command: push
+      nuGetFeedType: external
+      publishFeedCredentials: 'AutoSplat.NuGet'
+      packagesToPush: './Artifacts/**/*.nupkg'
