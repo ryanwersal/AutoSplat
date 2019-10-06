@@ -16,15 +16,15 @@
 
   <!-- Versioning properties -->
   <PropertyGroup>
-    <VersionPrefix Condition=" '$(VersionPrefix)'=='' ">2.0.0</VersionPrefix>
+    <VersionPrefix Condition=" '$(VersionPrefix)'=='' ">9.0.0</VersionPrefix>
     <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup>
-    <Moq>4.8.1</Moq>
-    <Splat>2.0.0</Splat>
+    <Moq>4.*</Moq>
+    <Splat>9.*</Splat>
     <Microsoft_NET_Test_Sdk>15.9.0</Microsoft_NET_Test_Sdk>
-    <xunit>2.4.0</xunit>
-    <xunit_runner_visualstudio>2.4.0</xunit_runner_visualstudio>
+    <xunit>2.4.1</xunit>
+    <xunit_runner_visualstudio>2.4.1</xunit_runner_visualstudio>
   </PropertyGroup>
 </Project>

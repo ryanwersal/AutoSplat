@@ -9,13 +9,13 @@ namespace AutoSplat
 
         public AutoMockContext()
         {
-            _currentResolver = Locator.Current;
-            Locator.Current = new MockDependencyResolver();
+            _currentResolver = Locator.Current as IDependencyResolver;
+            Locator.SetLocator(new MockDependencyResolver());
         }
 
         public void Dispose()
         {
-            Locator.Current = _currentResolver;
+            Locator.SetLocator(_currentResolver);
             _currentResolver = null;
         }
     }

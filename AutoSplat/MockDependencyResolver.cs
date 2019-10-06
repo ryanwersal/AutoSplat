@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Moq;
@@ -7,14 +6,13 @@ using Splat;
 
 namespace AutoSplat
 {
-    public class MockDependencyResolver : IMutableDependencyResolver
+    public class MockDependencyResolver : IDependencyResolver
     {
-        private ConcurrentDictionary<ServiceInfo, ConcurrentBag<Func<object>>> Dependencies { get; } 
-            = new ConcurrentDictionary<ServiceInfo, ConcurrentBag<Func<object>>>();
+        private ModernDependencyResolver resolver = new ModernDependencyResolver();
 
         public void Dispose()
         {
-            Dependencies.Clear();
+            resolver.Dispose();
         }
 
         private static Mock MockService(Type serviceType)
@@ -34,17 +32,13 @@ namespace AutoSplat
 
         public object GetService(Type serviceType, string contract = null)
         {
-            var serviceInfo = new ServiceInfo(serviceType, contract);
-            if (!Dependencies.ContainsKey(serviceInfo))
+            if (!resolver.HasRegistration(serviceType, contract))
             {
-                Dependencies[serviceInfo] = new ConcurrentBag<Func<object>>();
-
                 var obj = MockService(serviceType);
-                Dependencies[serviceInfo].Add(() => obj);
+                resolver.Register(() => obj, serviceType, contract);
             }
 
-            var factory = Dependencies[serviceInfo].First();
-            var result = factory();
+            var result = resolver.GetService(serviceType, contract);
             if (!(result is Mock))
             {
                 return result;
@@ -54,19 +48,15 @@ namespace AutoSplat
 
         public IEnumerable<object> GetServices(Type serviceType, string contract = null)
         {
-            var serviceInfo = new ServiceInfo(serviceType, contract);
-            if (!Dependencies.ContainsKey(serviceInfo))
+            if (!resolver.HasRegistration(serviceType, contract))
             {
-                Dependencies[serviceInfo] = new ConcurrentBag<Func<object>>();
-
                 var obj = MockService(serviceType);
-                Dependencies[serviceInfo].Add(() => obj);
+                resolver.Register(() => obj, serviceType, contract);
             }
 
-            return Dependencies[serviceInfo]
-                .Select(factory =>
+            return resolver.GetServices(serviceType, contract)
+                .Select(result =>
                 {
-                    var result = factory();
                     if (!(result is Mock))
                     {
                         return result;
@@ -79,18 +69,27 @@ namespace AutoSplat
 
         public void Register(Func<object> factory, Type serviceType, string contract = null)
         {
-            var serviceInfo = new ServiceInfo(serviceType, contract);
-            if (!Dependencies.ContainsKey(serviceInfo))
-            {
-                Dependencies[serviceInfo] = new ConcurrentBag<Func<object>>();
-            }
-
-            Dependencies[serviceInfo].Add(factory);
+            resolver.Register(factory, serviceType, contract);
         }
 
         public IDisposable ServiceRegistrationCallback(Type serviceType, string contract, Action<IDisposable> callback)
         {
-            throw new NotImplementedException();
+            return resolver.ServiceRegistrationCallback(serviceType, contract, callback);
+        }
+
+        public bool HasRegistration(Type serviceType, string contract = null)
+        {
+            return resolver.HasRegistration(serviceType, contract);
+        }
+
+        public void UnregisterCurrent(Type serviceType, string contract = null)
+        {
+            resolver.UnregisterCurrent(serviceType, contract);
+        }
+
+        public void UnregisterAll(Type serviceType, string contract = null)
+        {
+            resolver.UnregisterAll(serviceType, contract);
         }
     }
 }

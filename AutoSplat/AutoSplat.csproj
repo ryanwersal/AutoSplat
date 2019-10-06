@@ -8,7 +8,10 @@
     <RepositoryUrl>https://github.com/ryanwersal/AutoSplat</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/ryanwersal/AutoSplat/blob/master/LICENSE</PackageLicenseUrl>
     <PackageTags>splat moq automock</PackageTags>
-    <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+    <PackageReleaseNotes>
+      * Update to Splat 9 due to breaking changes
+      * Back the MockDependencyResolver with the actual ModernDependencyResolver
+    </PackageReleaseNotes>
     <Summary>Automatically Moq dependencies encountered through Splat's Locator.</Summary>
     <Description>Automatically Moq dependencies encountered through Splat's Locator.</Description>
   </PropertyGroup>

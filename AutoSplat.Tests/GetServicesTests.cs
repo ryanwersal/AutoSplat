@@ -61,5 +61,27 @@ namespace AutoSplat.Tests
             Assert.Contains(firstExpected, results);
             Assert.Contains(secondExpected, results);
         }
+
+        [Fact]
+        public void HasRegistrationReturnsTrueForExplicitRegistrations()
+        {
+            Type type = typeof(ICommon);
+            const string contract = "foobar";
+
+            Locator.CurrentMutable.Register(() => Mock.Of<ICommon>(), type, contract);
+
+            var resolver = Locator.Current as IDependencyResolver;
+            Assert.True(resolver.HasRegistration(type, contract));
+        }
+
+        [Fact]
+        public void HasRegistrationReturnsFalseIfNoExplicitRegistration()
+        {
+            Type type = typeof(ICommon);
+            const string contract = "foobar";
+
+            var resolver = Locator.Current as IDependencyResolver;
+            Assert.False(resolver.HasRegistration(type, contract));
+        }
     }
 }
